@@ -1,11 +1,5 @@
 # Distributed Web of Care: Client and Server
 
-## Structure
-
-**client**(dwc) <->
-**socketserver**(dwc-socket-server) <->
-**serverless app**(dwc-on-cloudflare-workers)
-
 ## On-Site Installation
 
 Install `node`, and once you have that installed, get `pm2` as well (`npm install pm2 -g`).

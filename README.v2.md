@@ -28,11 +28,11 @@ loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ip
 - server (socket)
 
 ### 2. installation
-##### 0. Prerequisite
+**0. Prerequisite**
 
-**0-1. access to rasberry-pi**
 1. connect to wifi (mesh (*dwc2Mesh*) or each pi directly)
 2. access to the pi using  `ssh` on terminal
+
 ```bash
 ssh {HOST_IP_FOR_A_PI} -p {PORT_FOR_A_PI}
 # ssh 192.168.100.1 -p 22 (if connected to each pi directly)
@@ -40,7 +40,8 @@ ssh {HOST_IP_FOR_A_PI} -p {PORT_FOR_A_PI}
 ```
 
 
-**0-2. installation**
+3. installation (inside rasberrypi)
+
 ```bash
 # 1. Install `node`
 # Documentation - https://github.com/nvm-sh/nvm
@@ -55,9 +56,7 @@ npm install -g pm2
 sudo apt update && sudo apt install nginx
 ```
 
-##### 1. client (/canvas)
-```
-### First time setup: Frontend
+### 1. First time setup: Frontend (*/canvas*)
 
 We are going to serve the frontend using `nginx`. In order to set that up, you need to follow the steps below *once*, the first time when setting a PI up.
 
@@ -67,9 +66,9 @@ We are going to serve the frontend using `nginx`. In order to set that up, you n
 4. Restart nginx: `sudo service nginx restart`.
 
 Since the folder is currently empty, if you navigate to the PI's IP in the browser you won't see anything.
-```
 
-##### 2. socket (/server)
+### 2. First time setup: Server (*/server*)
+
 Under the `server` folder of this repository, you should see a `.env-sample.txt` file. This is the template for the server `.env` configuration. Rename this file into `.env` (with no other extension,) and make sure to change the parameters in there to match the type of garden you want. There are four garden types: `moss`, `mushroom`, `lichen` and `all`. The individual gardens only contain one type of creature, while the `all` one contains all three types of creatures.
 Make sure to also update the `WEATHER_API` variable with the correct URL of the local weather server.
 
