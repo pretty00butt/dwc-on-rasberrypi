@@ -1,4 +1,4 @@
-const { getAllUsersInfo } = require('./db.controller')
+const usersService = require("../database/users.service");
 
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
@@ -9,7 +9,7 @@ exports.userBoard = (req, res) => {
 };
 
 exports.adminBoard = async (req, res) => {
-  let users = await getAllUsersInfo()
-  console.log('Users: ', users)
+  const { rows: users } = await usersService.find();
+  console.log("Users: ", users);
   res.status(200).send(users);
 };
