@@ -4,6 +4,9 @@ const config = require("./config");
 function convertDwcToWorkers(garden) {
   return {
     ...garden,
+    neighbors: undefined,
+    tileProps: undefined,
+    shaderProps: undefined,
     top: garden.neighbors.top,
     top_garden_id: garden.neighbors.top_id,
     bottom: garden.neighbors.bottom,
