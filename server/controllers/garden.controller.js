@@ -7,7 +7,7 @@ const { getConfig } = require("../config.js");
 const gardenService = require("../database/garden.service");
 const usersService = require("../database/users.service");
 
-exports.createGardenSection = async (uid) => {
+exports.createGardenSection = async (user) => {
   let gardenSection;
 
   // Start from an arbitrary garden section
@@ -131,7 +131,7 @@ exports.createGardenSection = async (uid) => {
     shaderSpeed: Math.random() * 10 + 1,
   };
 
-  newGarden.userId = userId;
+  newGarden.userId = user.id;
 
   let garden;
 

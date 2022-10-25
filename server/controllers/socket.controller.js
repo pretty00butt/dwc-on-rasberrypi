@@ -37,7 +37,7 @@ exports.userConnected = async (socket) => {
   user.creatureName = creatureName;
 
   await gardenController.clearGardenSection(uid);
-  const garden = await gardenController.createGardenSection(uid);
+  const garden = await gardenController.createGardenSection(user);
 
   if (garden) {
     user.garden_section_id = garden.id;
