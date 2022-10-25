@@ -50,8 +50,10 @@ exports.bringCreatureOnline = (creature) => {
 };
 
 exports.bringCreatureOffline = async (userId) => {
-  const creature = await creaturesService.findOne({ userId });
-  return creaturesService.update(creature.id, { isOnline: false });
+  const { row: creature } = await creaturesService.findOne({ userId });
+  if (creature) {
+    return creaturesService.update(creature.id, { isOnline: false });
+  }
 };
 
 exports.moveCreatureToGarden = async (creature, garden) => {
@@ -159,7 +161,7 @@ exports.evolveCreature = async (creatureId) => {
 
 exports.updateSingleCreatureForTap = async (user, newPosition) => {
   const garden = user.gardenSection;
-  const creature = await creaturesService.findOne({ user_id: user.id });
+  const { row: creature } = await creaturesService.findOne({ user_id: user.id });
 
   const creatureAnimationParams = await generateCreatureMovement(
     creature.appearance.creatureType,

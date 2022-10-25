@@ -41,7 +41,9 @@ exports.findOne = async function ({ where }) {
   }
 
   if (result.data && result.data.rows && result.data.rows.length) {
-    return result.data.rows[0];
+    return {
+      row: result.data.rows[0],
+    };
   }
 
   return null;
