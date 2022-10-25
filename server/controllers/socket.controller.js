@@ -28,10 +28,10 @@ exports.userConnected = async (socket) => {
 
   // Get or create user for the given uid
   console.log("Fetching user from DB: ", uid);
-  let user = await usersService.findByUid(uid);
+  let { row: user } = await usersService.findByUid(uid);
   if (!user) {
-    // TODO: creatureName?
-    await usersService.create({ uid, creatureName });
+    const { row } = await usersService.create({ uid, creatureName });
+    user = row;
   }
 
   user.creatureName = creatureName;
