@@ -52,7 +52,7 @@ exports.save = async function (garden) {
   }
 
   return {
-    row: convertWorkersToDwc(result.data),
+    row: convertWorkersToDwc(result.data.row),
   };
 };
 
@@ -113,7 +113,7 @@ exports.update = async function (id, data) {
   const result = await axios({
     method: "put",
     url: `${config.apiHost}/garden-sections/${id}`,
-    data,
+    data: convertDwcToWorkers(data),
   });
 
   if (result.data.error) {
@@ -133,5 +133,9 @@ exports.remove = async function (id) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  if (result.data && result.data.rows && result.data.rows.length) {
+    return {
+      row: convertWorkersToDwc(result.data.rows[0]),
+    };
+  }
 };

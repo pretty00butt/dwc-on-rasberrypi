@@ -171,7 +171,8 @@ exports.createGardenSection = async (user) => {
   let garden;
 
   try {
-    garden = await gardenService.save(newGarden);
+    const result = await gardenService.save(newGarden);
+    garden = result.row;
   } catch (e) {
     console.error("Exception in trying to save garden: ", e);
     return null;
