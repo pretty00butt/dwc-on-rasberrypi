@@ -47,12 +47,12 @@ exports.userConnected = async (socket) => {
     console.error("Failed to create garden section for user");
   }
 
-  let creature = await creatureController.getCreatureForUser(user.id);
+  let { row: creature } = await creatureController.getCreatureForUser(user.id);
   if (creature) {
     await creatureController.moveCreatureToGarden(creature, garden);
   } else {
     creature = await creatureController.createCreature(garden, user);
-    user.creature = creature.id;
+    user.creature_id = creature.id;
     await usersService.update(user.id, user);
   }
 
