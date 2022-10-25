@@ -50,7 +50,7 @@ exports.bringCreatureOnline = (creature) => {
 };
 
 exports.bringCreatureOffline = async (userId) => {
-  const { row: creature } = await creaturesService.findOne({ userId });
+  const { row: creature } = await creaturesService.findOne({ user_id: userId });
   if (creature) {
     return creaturesService.update(creature.id, { isOnline: false });
   }

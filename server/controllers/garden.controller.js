@@ -166,7 +166,7 @@ exports.createGardenSection = async (user) => {
     shaderSpeed: Math.random() * 10 + 1,
   };
 
-  newGarden.userId = user.id;
+  newGarden.user_id = user.id;
 
   let garden;
 
