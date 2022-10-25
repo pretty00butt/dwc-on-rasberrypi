@@ -1,3 +1,3 @@
 module.exports = {
-  apiHost: process.env.API_HOST || "http://localhost:8787",
+  apiHost: process.env.API_HOST || "https://garden-local-dev.hoonyland.workers.dev",
 };
