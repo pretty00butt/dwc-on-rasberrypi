@@ -74,7 +74,7 @@ exports.getAllCreaturesInfo = async () => {
 
 const getGardensBounds = async () => {
   const bbox = { x1: 1000000, y1: 1000000, x2: -100000, y2: -100000 };
-  const gardens = await gardenSectionsService.find();
+  const { row: gardens } = await gardenSectionsService.find();
   for (let g of gardens) {
     bbox.x1 = Math.min(bbox.x1, g.x);
     bbox.y1 = Math.min(bbox.y1, g.y);
