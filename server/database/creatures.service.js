@@ -46,7 +46,9 @@ exports.findOne = async function ({ where }) {
     };
   }
 
-  return null;
+  return {
+    row: null,
+  };
 };
 
 exports.findById = async function (id) {
