@@ -231,7 +231,7 @@ exports.createGardenSection = async (user) => {
 exports.clearGardenSection = async (uid) => {
   const { row: user } = await usersService.findByUid({ uid });
   if (!user) return;
-  const garden = await gardenService.findOne({ user_id: user.id });
+  const { row: garden } = await gardenService.findOne({ user_id: user.id });
   if (!garden) return;
 
   const nTop = garden.neighbors.top;
@@ -240,7 +240,7 @@ exports.clearGardenSection = async (uid) => {
       ...nTop,
       neighbors: {
         ...garden.neighbors,
-        bottom: null,
+        bottom: undefined,
         bottom_id: null,
       },
     });
@@ -252,7 +252,7 @@ exports.clearGardenSection = async (uid) => {
       ...nTop,
       neighbors: {
         ...garden.neighbors,
-        left: null,
+        left: undefined,
         left_id: null,
       },
     });
@@ -264,7 +264,7 @@ exports.clearGardenSection = async (uid) => {
       ...nTop,
       neighbors: {
         ...garden.neighbors,
-        top: null,
+        top: undefined,
         top_id: null,
       },
     });
@@ -276,7 +276,7 @@ exports.clearGardenSection = async (uid) => {
       ...nTop,
       neighbors: {
         ...garden.neighbors,
-        right: null,
+        right: undefined,
         right_id: null,
       },
     });
