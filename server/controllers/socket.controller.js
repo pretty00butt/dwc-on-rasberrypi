@@ -60,7 +60,7 @@ exports.userConnected = async (socket) => {
 
   io.emit("usersUpdate", await getOnlineUsers());
 
-  const creatures = await getAllCreatures();
+  const { rows: creatures } = await getAllCreatures();
   const creaturesString = JSON.stringify(creatures, (key, val) => {
     return val && val.toFixed ? Number(val.toFixed(3)) : val;
   });
@@ -107,7 +107,7 @@ const onDisconnect = (socket) => async (reason) => {
 
   io.emit("usersUpdate", onlineUsers);
 
-  const creatures = await getAllCreatures();
+  const { rows: creatures } = await getAllCreatures();
 
   const creaturesString = JSON.stringify(creatures, (key, val) => {
     return val && val.toFixed ? Number(val.toFixed(3)) : val;
@@ -127,7 +127,8 @@ const getAllCreatures = async () => {
 };
 
 exports.startAnimatingCreatures = async () => {
-  allCreatures = (await getAllCreatures()).reduce((acc, el) => {
+  const { rows: creatures } = await getAllCreatures();
+  allCreatures = creatures.reduce((acc, el) => {
     acc[el.id] = el;
     return acc;
   }, {});
