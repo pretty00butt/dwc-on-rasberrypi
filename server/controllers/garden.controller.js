@@ -25,7 +25,18 @@ exports.createGardenSection = async (user) => {
 
   // If the query didn't return any results, it means there are no gardens in the database, so we create the first one.
   if (!gardenSection || gardenSection.length == 0) {
-    newGarden = { x: 0, y: 0, width: constants.GARDEN_WIDTH, height: constants.GARDEN_HEIGHT };
+    newGarden = {
+      x: 0,
+      y: 0,
+      width: constants.GARDEN_WIDTH,
+      height: constants.GARDEN_HEIGHT,
+      neighbors: {
+        top_id: null,
+        bottom_id: null,
+        right_id: null,
+        left_id: null,
+      },
+    };
   } else {
     // We do a "random" walk until we find an empty spot
     let visited = {};
@@ -70,6 +81,12 @@ exports.createGardenSection = async (user) => {
               y: gardenSection.y - constants.GARDEN_HEIGHT,
               width: constants.GARDEN_WIDTH,
               height: constants.GARDEN_HEIGHT,
+              neighbors: {
+                top_id: null,
+                bottom_id: null,
+                right_id: null,
+                left_id: null,
+              },
             };
             break;
           case "right":
@@ -78,6 +95,12 @@ exports.createGardenSection = async (user) => {
               y: gardenSection.y,
               width: constants.GARDEN_WIDTH,
               height: constants.GARDEN_HEIGHT,
+              neighbors: {
+                top_id: null,
+                bottom_id: null,
+                right_id: null,
+                left_id: null,
+              },
             };
             break;
           case "bottom":
@@ -86,6 +109,12 @@ exports.createGardenSection = async (user) => {
               y: gardenSection.y + constants.GARDEN_HEIGHT,
               width: constants.GARDEN_WIDTH,
               height: constants.GARDEN_HEIGHT,
+              neighbors: {
+                top_id: null,
+                bottom_id: null,
+                right_id: null,
+                left_id: null,
+              },
             };
             break;
           case "left":
@@ -94,6 +123,12 @@ exports.createGardenSection = async (user) => {
               y: gardenSection.y,
               width: constants.GARDEN_WIDTH,
               height: constants.GARDEN_HEIGHT,
+              neighbors: {
+                top_id: null,
+                bottom_id: null,
+                right_id: null,
+                left_id: null,
+              },
             };
             break;
         }
@@ -148,8 +183,8 @@ exports.createGardenSection = async (user) => {
       y: newGarden.y - constants.GARDEN_HEIGHT,
     });
     if (nTop) {
-      nTop.neighbors.bottom = garden.id;
-      garden.neighbors.top = nTop.id;
+      nTop.neighbors.bottom_id = garden.id;
+      garden.neighbors.top_id = nTop.id;
       await gardenService.update(nTop.id, nTop);
     }
 
@@ -158,8 +193,8 @@ exports.createGardenSection = async (user) => {
       y: newGarden.y,
     });
     if (nRight) {
-      nRight.neighbors.left = garden.id;
-      garden.neighbors.right = nRight.id;
+      nRight.neighbors.left_id = garden.id;
+      garden.neighbors.right_id = nRight.id;
       await gardenService.update(nRight.id, nRight);
     }
 
@@ -168,8 +203,8 @@ exports.createGardenSection = async (user) => {
       y: newGarden.y + constants.GARDEN_HEIGHT,
     });
     if (nBottom) {
-      nBottom.neighbors.top = garden.id;
-      garden.neighbors.bottom = nBottom.id;
+      nBottom.neighbors.top_id = garden.id;
+      garden.neighbors.bottom_id = nBottom.id;
       await gardenService.update(nBottom.id, nBottom);
     }
 
@@ -178,8 +213,8 @@ exports.createGardenSection = async (user) => {
       y: newGarden.y,
     });
     if (nLeft) {
-      nLeft.neighbors.right = garden.id;
-      garden.neighbors.left = nLeft.id;
+      nLeft.neighbors.right_id = garden.id;
+      garden.neighbors.left_id = nLeft.id;
       await gardenService.update(nLeft.id, nLeft);
     }
 
