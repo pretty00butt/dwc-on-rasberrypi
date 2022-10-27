@@ -26,7 +26,7 @@ exports.find = async function (where) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  return result.data.rows;
 };
 
 exports.findOne = async function (where) {

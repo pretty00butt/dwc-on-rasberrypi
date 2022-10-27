@@ -76,7 +76,7 @@ exports.findByUid = async function (uid) {
     row.gardenSection = convertWorkersToDwc(row.gardenSection);
   }
 
-  return { row };
+  return row;
 };
 
 exports.findOne = async function ({ where }) {

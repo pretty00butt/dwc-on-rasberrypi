@@ -28,7 +28,7 @@ exports.userConnected = async (socket) => {
 
   // Get or create user for the given uid
   console.log("Fetching user from DB: ", uid);
-  let { row: user } = await usersService.findByUid(uid);
+  let user = await usersService.findByUid(uid);
   if (!user) {
     const { row } = await usersService.create({ uid, creatureName });
     user = row;
@@ -63,7 +63,7 @@ exports.userConnected = async (socket) => {
 
   io.emit("usersUpdate", onlineUsers);
 
-  const { rows: creatures } = await creatureController.getAllCreaturesInfo();
+  const creatures = await creatureController.getAllCreaturesInfo();
   const creaturesString = JSON.stringify(creatures, (key, val) => {
     return val && val.toFixed ? Number(val.toFixed(3)) : val;
   });
@@ -103,16 +103,18 @@ const onDisconnect = (socket) => async (reason) => {
   delete socketMap[uid];
   delete gardenForUidCache[uid];
 
-  const user = usersService.findByUid(uid);
+  const user = await usersService.findByUid(uid);
 
-  await gardenController.clearGardenSection(user);
-  await creatureController.bringCreatureOffline(user);
+  if (user) {
+    await gardenController.clearGardenSection(user);
+    await creatureController.bringCreatureOffline(user);
+  }
 
   const onlineUsers = await getOnlineUsers();
 
   io.emit("usersUpdate", onlineUsers);
 
-  const { rows: creatures } = await creatureController.getAllCreaturesInfo();
+  const creatures = await creatureController.getAllCreaturesInfo();
 
   const creaturesString = JSON.stringify(creatures, (key, val) => {
     return val && val.toFixed ? Number(val.toFixed(3)) : val;
@@ -125,7 +127,7 @@ const getOnlineUsers = async () => {
   console.log("get online users: ", Object.keys(socketMap));
   const users = await Promise.all(
     Object.keys(socketMap).map((uid) => {
-      return usersService.findByUid(uid).then((res) => res.row);
+      return usersService.findByUid(uid);
     })
   );
 
@@ -133,7 +135,7 @@ const getOnlineUsers = async () => {
 };
 
 exports.startAnimatingCreatures = async () => {
-  const { rows: creatures } = await creatureController.getAllCreaturesInfo();
+  const creatures = await creatureController.getAllCreaturesInfo();
   allCreatures = creatures.reduce((acc, el) => {
     acc[el.id] = el;
     return acc;
