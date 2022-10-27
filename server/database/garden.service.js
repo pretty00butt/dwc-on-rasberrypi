@@ -111,6 +111,8 @@ exports.findOne = async function (where) {
 
 exports.update = async function (id, data) {
   data.user = undefined;
+  data.owner = undefined;
+
   const result = await axios({
     method: "put",
     url: `${config.apiHost}/garden-sections/${id}`,
@@ -125,6 +127,9 @@ exports.update = async function (id, data) {
 };
 
 exports.updateWithoutConvert = async function (id, data) {
+  data.user = undefined;
+  data.owner = undefined;
+
   const result = await axios({
     method: "put",
     url: `${config.apiHost}/garden-sections/${id}`,

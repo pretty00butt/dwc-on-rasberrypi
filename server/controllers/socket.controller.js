@@ -36,7 +36,7 @@ exports.userConnected = async (socket) => {
 
   user.creatureName = creatureName;
 
-  await gardenController.clearGardenSection(uid);
+  await gardenController.clearGardenSection(user);
   const garden = await gardenController.createGardenSection(user);
   console.log(`garden ${garden.id} is created for ${user.id}`);
 

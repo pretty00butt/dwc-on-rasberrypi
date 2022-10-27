@@ -88,6 +88,7 @@ exports.findById = async function (id) {
 
 exports.update = async function (id, data) {
   data.user = undefined;
+  data.owner = undefined;
 
   const result = await axios({
     method: "put",
