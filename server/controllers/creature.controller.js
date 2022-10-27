@@ -30,7 +30,7 @@ exports.createCreature = async (garden, user) => {
     appearance: {
       ...creatureProps,
     },
-    animated_properties: {
+    animatedProperties: {
       position: await generateCreatureMovement(creatureProps.creatureType, garden),
     },
     user_id: user.id,
@@ -58,7 +58,7 @@ exports.bringCreatureOffline = async (user) => {
 };
 
 exports.moveCreatureToGarden = async (creature, garden) => {
-  creature.animated_properties = {
+  creature.animatedProperties = {
     position: await generateCreatureMovement(creature.appearance.creatureType, garden),
   };
 
@@ -170,8 +170,8 @@ exports.updateSingleCreatureForTap = async (user, newPosition) => {
     null,
     newPosition
   );
-  creature.animated_properties.position = creatureAnimationParams;
-  await creaturesService.update(creature.id, { animated_properties: creature.animated_properties });
+  creature.animatedProperties.position = creatureAnimationParams;
+  await creaturesService.update(creature.id, { animatedProperties: creature.animatedProperties });
 
   let updated = {};
   updated[creature.id] = { position: creatureAnimationParams };
@@ -193,10 +193,10 @@ exports.updateCreatures = async (onlineUsers, gardensForUid) => {
   }, {});
 
   for (const [key, creature] of Object.entries(allCreatures)) {
-    const { animated_properties } = creature;
+    const { animatedProperties } = creature;
 
     let updatesForKey = {};
-    for (const [animKey, animProp] of Object.entries(animated_properties)) {
+    for (const [animKey, animProp] of Object.entries(animatedProperties)) {
       if (now - animProp.startTime >= animProp.duration * 1000) {
         //const ownerGarden = gardensForUid[creature.owner.uid]
         const ownerGarden = utils.randomElementFromArray(Object.values(gardensForUid));
@@ -205,11 +205,11 @@ exports.updateCreatures = async (onlineUsers, gardensForUid) => {
           ownerGarden,
           animProp.to
         );
-        animated_properties[animKey] = updatesForKey[animKey] = creatureAnimationParams;
+        animatedProperties[animKey] = updatesForKey[animKey] = creatureAnimationParams;
       }
 
       if (Object.keys(updatesForKey).length > 0) {
-        await creaturesService.update(creature.id, { animated_properties: creature.animated_properties });
+        await creaturesService.update(creature.id, { animatedProperties: creature.animatedProperties });
         updated[key] = updatesForKey;
       }
     }

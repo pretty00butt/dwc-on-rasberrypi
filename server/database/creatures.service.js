@@ -1,18 +1,40 @@
 const axios = require("axios");
 const config = require("./config");
 
+function convertDwcToWorkers(creature) {
+  if (!creature) {
+    return null;
+  }
+
+  return {
+    ...creature,
+    animated_properties: creature.animatedProperties,
+  };
+}
+
+function convertWorkersToDwc(creature) {
+  if (!creature) {
+    return null;
+  }
+
+  return {
+    ...creature,
+    animatedProperties: creature.animated_properties,
+  };
+}
+
 exports.save = async function (creature) {
   const result = await axios({
     method: "post",
     url: `${config.apiHost}/creatures`,
-    data: creature,
+    data: convertDwcToWorkers(creature),
   });
 
   if (result.data.error) {
     throw new Error(result.data.error);
   }
 
-  return result.data.row;
+  return convertWorkersToDwc(result.data.row);
 };
 
 exports.find = async function (where) {
@@ -26,7 +48,7 @@ exports.find = async function (where) {
     throw new Error(result.data.error);
   }
 
-  return result.data.rows;
+  return result.data.rows.map(convertWorkersToDwc);
 };
 
 exports.findOne = async function (where) {
@@ -42,7 +64,7 @@ exports.findOne = async function (where) {
 
   if (result.data && result.data.rows && result.data.rows.length) {
     return {
-      row: result.data.rows[0],
+      row: convertWorkersToDwc(result.data.rows[0]),
     };
   }
 
@@ -64,7 +86,7 @@ exports.findOneByUid = async function (where) {
 
   if (result.data && result.data.rows && result.data.rows.length) {
     return {
-      row: result.data.rows[0],
+      row: convertWorkersToDwc(result.data.rows[0]),
     };
   }
 
@@ -83,7 +105,7 @@ exports.findById = async function (id) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  return convertWorkersToDwc(result.data.row);
 };
 
 exports.update = async function (id, data) {
@@ -93,12 +115,12 @@ exports.update = async function (id, data) {
   const result = await axios({
     method: "put",
     url: `${config.apiHost}/creatures/${id}`,
-    data,
+    data: data ? convertDwcToWorkers(data) : data,
   });
 
   if (result.data.error) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  return convertWorkersToDwc(result.data.row);
 };
