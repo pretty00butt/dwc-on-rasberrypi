@@ -250,10 +250,11 @@ exports.createGardenSection = async (user) => {
   return garden;
 };
 
-exports.clearGardenSection = async (uid) => {
-  const { row: user } = await usersService.findByUid(uid);
+exports.clearGardenSection = async (user) => {
   if (!user) return;
+
   const { row: garden } = await gardenService.findOne({ user_id: user.id });
+
   if (!garden) return;
 
   const { top_id, bottom_id, left_id, right_id } = garden.neighbors;
@@ -293,5 +294,5 @@ exports.clearGardenSection = async (uid) => {
     //
   }
 
-  console.warn("clearGardenSection for user", uid);
+  console.warn("clearGardenSection for user", user.uid);
 };

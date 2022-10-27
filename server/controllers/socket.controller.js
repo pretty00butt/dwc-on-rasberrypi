@@ -103,9 +103,10 @@ const onDisconnect = (socket) => async (reason) => {
   delete socketMap[uid];
   delete gardenForUidCache[uid];
 
-  console.log("on disconnect");
-  await gardenController.clearGardenSection(uid);
-  await creatureController.bringCreatureOffline(uid);
+  const user = usersService.findByUid(uid);
+
+  await gardenController.clearGardenSection(user);
+  await creatureController.bringCreatureOffline(user);
 
   const onlineUsers = await getOnlineUsers();
 

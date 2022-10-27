@@ -49,8 +49,9 @@ exports.bringCreatureOnline = (creature) => {
   return creaturesService.update(creature.id, { is_online: true });
 };
 
-exports.bringCreatureOffline = async (uid) => {
-  const { row: creature } = await creaturesService.findOneByUid({ uid });
+exports.bringCreatureOffline = async (user) => {
+  const { row: creature } = await creaturesService.findOne({ user_id: user.id });
+
   if (creature) {
     return creaturesService.update(creature.id, { is_online: false });
   }
