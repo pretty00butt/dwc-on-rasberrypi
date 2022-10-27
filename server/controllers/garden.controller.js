@@ -173,9 +173,8 @@ exports.createGardenSection = async (user) => {
 
   try {
     garden = await gardenService.save(newGarden);
-    console.log(garden);
     console.log("garden is created");
-    console.log("saved garden to create a new: ", result.row.id);
+    console.log("saved garden to create a new: ", garden.id, garden.owner.id);
   } catch (e) {
     console.error("Exception in trying to save garden: ", e);
     return null;
