@@ -51,9 +51,7 @@ exports.save = async function (garden) {
     throw new Error(result.data.error);
   }
 
-  return {
-    row: convertWorkersToDwc(result.data.row),
-  };
+  return convertWorkersToDwc(result.data.row);
 };
 
 exports.find = async function (where) {

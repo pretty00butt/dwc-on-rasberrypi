@@ -24,7 +24,7 @@ exports.createGardenSection = async (user) => {
   let newGarden = null;
 
   // If the query didn't return any results, it means there are no gardens in the database, so we create the first one.
-  if (!gardenSection || gardenSection.length == 0) {
+  if (!gardenSection) {
     newGarden = {
       x: 0,
       y: 0,
@@ -74,15 +74,6 @@ exports.createGardenSection = async (user) => {
         }
       } else {
         // If we found one free neighbor, create a garden
-        console.log("======");
-        console.log("======");
-        console.log("======");
-        console.log("======");
-        console.log(emptyNeighborKey);
-        console.log("======");
-        console.log("======");
-        console.log("======");
-        console.log("======");
 
         switch (emptyNeighborKey) {
           case "top":
@@ -181,9 +172,10 @@ exports.createGardenSection = async (user) => {
   let garden;
 
   try {
-    const result = await gardenService.save(newGarden);
+    garden = await gardenService.save(newGarden);
+    console.log(garden);
+    console.log("garden is created");
     console.log("saved garden to create a new: ", result.row.id);
-    garden = result.row;
   } catch (e) {
     console.error("Exception in trying to save garden: ", e);
     return null;
@@ -236,17 +228,6 @@ exports.createGardenSection = async (user) => {
     return null;
   }
 
-  console.log("++++++");
-  console.log("++++++");
-  console.log("++++++");
-  console.log("++++++");
-  console.log("garden is created");
-  console.log(garden);
-  console.log("++++++");
-  console.log("++++++");
-  console.log("++++++");
-  console.log("++++++");
-  console.log("++++++");
   return garden;
 };
 
