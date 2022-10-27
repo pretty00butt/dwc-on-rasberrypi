@@ -266,14 +266,14 @@ exports.clearGardenSection = async (user) => {
   }
 
   if (right_id) {
-    console.log("remove top: ", right_id);
+    console.log("remove right: ", right_id);
     await gardenService.updateWithoutConvert(right_id, {
       left_garden_id: null,
     });
   }
 
   if (bottom_id) {
-    console.log("remove top: ", bottom_id);
+    console.log("remove bottom: ", bottom_id);
     await gardenService.updateWithoutConvert(bottom_id, {
       top_garden_id: null,
     });
@@ -288,10 +288,13 @@ exports.clearGardenSection = async (user) => {
 
   console.log("remove garden: ", garden.id);
   try {
-    await usersService.update(user.id, { garden_section_id: null });
+    if (user) {
+      await usersService.update(user.id, { garden_section_id: null });
+    }
+
     await gardenService.remove(garden.id);
   } catch (e) {
-    //
+    console.error(e);
   }
 
   console.warn("clearGardenSection for user", user.uid);
