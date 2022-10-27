@@ -170,8 +170,8 @@ exports.updateSingleCreatureForTap = async (user, newPosition) => {
     null,
     newPosition
   );
-  creature.animatedProperties.position = creatureAnimationParams;
-  await creaturesService.update(creature.id, { animated_properties: creature.animatedProperties });
+  creature.animated_properties.position = creatureAnimationParams;
+  await creaturesService.update(creature.id, { animated_properties: creature.animated_properties });
 
   let updated = {};
   updated[creature.id] = { position: creatureAnimationParams };
@@ -193,10 +193,10 @@ exports.updateCreatures = async (onlineUsers, gardensForUid) => {
   }, {});
 
   for (const [key, creature] of Object.entries(allCreatures)) {
-    const { animatedProperties } = creature;
+    const { animated_properties } = creature;
 
     let updatesForKey = {};
-    for (const [animKey, animProp] of Object.entries(animatedProperties)) {
+    for (const [animKey, animProp] of Object.entries(animated_properties)) {
       if (now - animProp.startTime >= animProp.duration * 1000) {
         //const ownerGarden = gardensForUid[creature.owner.uid]
         const ownerGarden = utils.randomElementFromArray(Object.values(gardensForUid));
@@ -205,11 +205,11 @@ exports.updateCreatures = async (onlineUsers, gardensForUid) => {
           ownerGarden,
           animProp.to
         );
-        animatedProperties[animKey] = updatesForKey[animKey] = creatureAnimationParams;
+        animated_properties[animKey] = updatesForKey[animKey] = creatureAnimationParams;
       }
 
       if (Object.keys(updatesForKey).length > 0) {
-        await creaturesService.update(creature.id, { animated_properties: creature.animatedProperties });
+        await creaturesService.update(creature.id, { animated_properties: creature.animated_properties });
         updated[key] = updatesForKey;
       }
     }
