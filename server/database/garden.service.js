@@ -89,7 +89,7 @@ exports.findById = async function (id) {
   };
 };
 
-exports.findOne = async function ({ where }) {
+exports.findOne = async function (where) {
   const result = await axios({
     method: "get",
     url: `${config.apiHost}/garden-sections/all`,
@@ -110,10 +110,25 @@ exports.findOne = async function ({ where }) {
 };
 
 exports.update = async function (id, data) {
+  data.user = undefined;
   const result = await axios({
     method: "put",
     url: `${config.apiHost}/garden-sections/${id}`,
     data: convertDwcToWorkers(data),
+  });
+
+  if (result.data.error) {
+    throw new Error(result.data.error);
+  }
+
+  return result.data;
+};
+
+exports.updateWithoutConvert = async function (id, data) {
+  const result = await axios({
+    method: "put",
+    url: `${config.apiHost}/garden-sections/${id}`,
+    data,
   });
 
   if (result.data.error) {
@@ -129,7 +144,7 @@ exports.remove = async function (id) {
     url: `${config.apiHost}/garden-sections/${id}`,
   });
 
-  if (result.data.error) {
+  if (result.data.status !== 404 && result.data.error) {
     throw new Error(result.data.error);
   }
 
@@ -138,4 +153,10 @@ exports.remove = async function (id) {
       row: convertWorkersToDwc(result.data.rows[0]),
     };
   }
+
+  return {
+    row: null,
+  };
 };
+
+exports.convertWorkersToDwc = convertWorkersToDwc;

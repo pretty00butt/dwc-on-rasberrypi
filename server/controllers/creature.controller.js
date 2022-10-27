@@ -49,10 +49,10 @@ exports.bringCreatureOnline = (creature) => {
   return creaturesService.update(creature.id, { is_online: true });
 };
 
-exports.bringCreatureOffline = async (userId) => {
-  const { row: creature } = await creaturesService.findOne({ user_id: userId });
+exports.bringCreatureOffline = async (uid) => {
+  const { row: creature } = await creaturesService.findOneByUid({ uid });
   if (creature) {
-    return creaturesService.update(creature.id, { isOnline: false });
+    return creaturesService.update(creature.id, { is_online: false });
   }
 };
 
@@ -74,7 +74,7 @@ exports.getAllCreaturesInfo = async () => {
 
 const getGardensBounds = async () => {
   const bbox = { x1: 1000000, y1: 1000000, x2: -100000, y2: -100000 };
-  const { row: gardens } = await gardenSectionsService.find();
+  const { rows: gardens } = await gardenSectionsService.find();
   for (let g of gardens) {
     bbox.x1 = Math.min(bbox.x1, g.x);
     bbox.y1 = Math.min(bbox.y1, g.y);
@@ -187,7 +187,7 @@ exports.updateCreatures = async (onlineUsers, gardensForUid) => {
 
   const { rows: creatures } = await creaturesService.find({ is_online: true });
   allCreatures = creatures.reduce((acc, el) => {
-    if (onlineUsers.indexOf(el.owner.id) != -1) acc[el._id] = el;
+    if (onlineUsers.indexOf(el.user.id) != -1) acc[el._id] = el;
     return acc;
   }, {});
 

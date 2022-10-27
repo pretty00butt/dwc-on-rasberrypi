@@ -38,6 +38,7 @@ exports.userConnected = async (socket) => {
 
   await gardenController.clearGardenSection(uid);
   const garden = await gardenController.createGardenSection(user);
+  console.log(`garden ${garden.id} is created for ${user.id}`);
 
   if (garden) {
     user.garden_section_id = garden.id;
@@ -58,7 +59,9 @@ exports.userConnected = async (socket) => {
 
   await creatureController.bringCreatureOnline(creature);
 
-  io.emit("usersUpdate", await getOnlineUsers());
+  const onlineUsers = await getOnlineUsers();
+
+  io.emit("usersUpdate", onlineUsers);
 
   const { rows: creatures } = await creatureController.getAllCreaturesInfo();
   const creaturesString = JSON.stringify(creatures, (key, val) => {
@@ -100,10 +103,11 @@ const onDisconnect = (socket) => async (reason) => {
   delete socketMap[uid];
   delete gardenForUidCache[uid];
 
+  console.log("on disconnect");
   await gardenController.clearGardenSection(uid);
   await creatureController.bringCreatureOffline(uid);
 
-  const { rows: onlineUsers } = await getOnlineUsers();
+  const onlineUsers = await getOnlineUsers();
 
   io.emit("usersUpdate", onlineUsers);
 
@@ -116,9 +120,15 @@ const onDisconnect = (socket) => async (reason) => {
   io.emit("creatures", creaturesString);
 };
 
-const getOnlineUsers = () => {
+const getOnlineUsers = async () => {
   console.log("get online users: ", Object.keys(socketMap));
-  return Promise.all(Object.keys(socketMap).map((uid) => usersService.findByUid(uid)));
+  const users = await Promise.all(
+    Object.keys(socketMap).map((uid) => {
+      return usersService.findByUid(uid).then((res) => res.row);
+    })
+  );
+
+  return users.filter((u) => !!u);
 };
 
 exports.startAnimatingCreatures = async () => {

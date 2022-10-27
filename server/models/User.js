@@ -4,7 +4,7 @@ module.exports = class User {
   constructor(props) {
     this.gardenSection = null;
     this.creature = null;
-    this.isOnline = null;
+    this.is_online = null;
 
     Object.keys(props).forEach((key) => {
       if (!key in this) {

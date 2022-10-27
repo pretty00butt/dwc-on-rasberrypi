@@ -29,7 +29,29 @@ exports.find = async function (where) {
   return result.data;
 };
 
-exports.findOne = async function ({ where }) {
+exports.findOne = async function (where) {
+  const result = await axios({
+    method: "get",
+    url: `${config.apiHost}/creatures/all`,
+    params: where,
+  });
+
+  if (result.data.error) {
+    throw new Error(result.data.error);
+  }
+
+  if (result.data && result.data.rows && result.data.rows.length) {
+    return {
+      row: result.data.rows[0],
+    };
+  }
+
+  return {
+    row: null,
+  };
+};
+
+exports.findOneByUid = async function (where) {
   const result = await axios({
     method: "get",
     url: `${config.apiHost}/creatures/all`,
@@ -65,6 +87,8 @@ exports.findById = async function (id) {
 };
 
 exports.update = async function (id, data) {
+  data.user = undefined;
+
   const result = await axios({
     method: "put",
     url: `${config.apiHost}/creatures/${id}`,

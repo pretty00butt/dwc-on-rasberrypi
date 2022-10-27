@@ -12,7 +12,6 @@ exports.signIn = async function ({ username, password }) {
   });
 
   if (result.data.error) {
-    console.log(result.data.error);
     throw new Error(result.data.error);
   }
 

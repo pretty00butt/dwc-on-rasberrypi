@@ -1,5 +1,6 @@
 const axios = require("axios");
 const config = require("./config");
+const { convertWorkersToDwc } = require("./garden.service");
 
 exports.create = async function (user) {
   const result = await axios({
@@ -12,7 +13,11 @@ exports.create = async function (user) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  const { row } = result.data;
+  if (row.gardenSection) {
+    row.gardenSection = convertWorkersToDwc(row.gardenSection);
+  }
+  return { row };
 };
 
 exports.find = async function ({ where }) {
@@ -27,7 +32,12 @@ exports.find = async function ({ where }) {
   }
 
   if (result.data && result.data.rows) {
-    return result.data.rows;
+    return result.data.rows.map((row) => {
+      if (row.gardenSection) {
+        row.gardenSection = convertWorkersToDwc(row.gardenSection);
+      }
+      return row;
+    });
   }
 
   return [];
@@ -43,7 +53,12 @@ exports.findById = async function (id) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  const { row } = result.data;
+  if (row && row.gardenSection) {
+    row.gardenSection = convertWorkersToDwc(row.gardenSection);
+  }
+
+  return { row };
 };
 
 exports.findByUid = async function (uid) {
@@ -56,7 +71,12 @@ exports.findByUid = async function (uid) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  const { row } = result.data;
+  if (row && row.gardenSection) {
+    row.gardenSection = convertWorkersToDwc(row.gardenSection);
+  }
+
+  return { row };
 };
 
 exports.findOne = async function ({ where }) {
@@ -71,13 +91,21 @@ exports.findOne = async function ({ where }) {
   }
 
   if (result.data && result.data.rows && result.data.rows.length) {
-    return result.data.rows[0];
+    const row = result.data.rows[0];
+    if (row.gardenSection) {
+      row.gardenSection = convertWorkersToDwc(row.gardenSection);
+    }
+    return row;
   }
 
   return null;
 };
 
 exports.update = async function (id, data) {
+  data.gardenSection = undefined;
+  data.role = undefined;
+  data.creature = undefined;
+
   const result = await axios({
     method: "put",
     url: `${config.apiHost}/users/${id}`,
@@ -88,5 +116,12 @@ exports.update = async function (id, data) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  if (result.data && result.data.rows && result.data.rows.length) {
+    const row = result.data.rows[0];
+    if (row.gardenSection) {
+      row.gardenSection = convertWorkersToDwc(row.gardenSection);
+    }
+
+    return { row };
+  }
 };

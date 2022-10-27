@@ -40,7 +40,7 @@ require("./routes/auth.routes")(app);
 require("./routes/socket.routes")(io);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

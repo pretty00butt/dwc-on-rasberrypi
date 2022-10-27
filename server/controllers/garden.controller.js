@@ -74,6 +74,16 @@ exports.createGardenSection = async (user) => {
         }
       } else {
         // If we found one free neighbor, create a garden
+        console.log("======");
+        console.log("======");
+        console.log("======");
+        console.log("======");
+        console.log(emptyNeighborKey);
+        console.log("======");
+        console.log("======");
+        console.log("======");
+        console.log("======");
+
         switch (emptyNeighborKey) {
           case "top":
             newGarden = {
@@ -172,6 +182,7 @@ exports.createGardenSection = async (user) => {
 
   try {
     const result = await gardenService.save(newGarden);
+    console.log("saved garden to create a new: ", result.row.id);
     garden = result.row;
   } catch (e) {
     console.error("Exception in trying to save garden: ", e);
@@ -225,65 +236,62 @@ exports.createGardenSection = async (user) => {
     return null;
   }
 
+  console.log("++++++");
+  console.log("++++++");
+  console.log("++++++");
+  console.log("++++++");
+  console.log("garden is created");
+  console.log(garden);
+  console.log("++++++");
+  console.log("++++++");
+  console.log("++++++");
+  console.log("++++++");
+  console.log("++++++");
   return garden;
 };
 
 exports.clearGardenSection = async (uid) => {
-  const { row: user } = await usersService.findByUid({ uid });
+  const { row: user } = await usersService.findByUid(uid);
   if (!user) return;
   const { row: garden } = await gardenService.findOne({ user_id: user.id });
   if (!garden) return;
 
-  const nTop = garden.neighbors.top;
-  if (nTop) {
-    await gardenService.update(nTop.id, {
-      ...nTop,
-      neighbors: {
-        ...garden.neighbors,
-        bottom: undefined,
-        bottom_id: null,
-      },
+  const { top_id, bottom_id, left_id, right_id } = garden.neighbors;
+  if (top_id) {
+    console.log("remove top: ", top_id);
+    await gardenService.updateWithoutConvert(top_id, {
+      bottom_garden_id: null,
     });
   }
 
-  const nRight = garden.neighbors.right;
-  if (nRight) {
-    await gardenService.update(nRight.id, {
-      ...nTop,
-      neighbors: {
-        ...garden.neighbors,
-        left: undefined,
-        left_id: null,
-      },
+  if (right_id) {
+    console.log("remove top: ", right_id);
+    await gardenService.updateWithoutConvert(right_id, {
+      left_garden_id: null,
     });
   }
 
-  const nBottom = garden.neighbors.bottom;
-  if (nBottom) {
-    await gardenService.update(nBottom.id, {
-      ...nTop,
-      neighbors: {
-        ...garden.neighbors,
-        top: undefined,
-        top_id: null,
-      },
+  if (bottom_id) {
+    console.log("remove top: ", bottom_id);
+    await gardenService.updateWithoutConvert(bottom_id, {
+      top_garden_id: null,
     });
   }
 
-  const nLeft = garden.neighbors.left;
-  if (nLeft) {
-    await gardenService.update(nLeft.id, {
-      ...nTop,
-      neighbors: {
-        ...garden.neighbors,
-        right: undefined,
-        right_id: null,
-      },
+  if (left_id) {
+    console.log("remove left: ", left_id);
+    await gardenService.updateWithoutConvert(left_id, {
+      right_garden_id: null,
     });
   }
 
-  await usersService.update(id, { garden_section_id: null });
-  await gardenService.remove(garden.id);
+  console.log("remove garden: ", garden.id);
+  try {
+    await usersService.update(user.id, { garden_section_id: null });
+    await gardenService.remove(garden.id);
+  } catch (e) {
+    //
+  }
 
   console.warn("clearGardenSection for user", uid);
 };
