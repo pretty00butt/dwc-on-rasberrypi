@@ -186,7 +186,7 @@ exports.updateCreatures = async (onlineUsers, gardensForUid) => {
 
   const now = new Date().getTime();
 
-  const { rows: creatures } = await creaturesService.find({ is_online: true });
+  const creatures = await creaturesService.find({ is_online: true });
   allCreatures = creatures.reduce((acc, el) => {
     if (onlineUsers.indexOf(el.user.id) != -1) acc[el._id] = el;
     return acc;
