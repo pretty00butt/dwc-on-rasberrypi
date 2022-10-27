@@ -9,6 +9,7 @@ function convertDwcToWorkers(creature) {
   return {
     ...creature,
     animated_properties: creature.animatedProperties,
+    animatedProperties: undefined,
   };
 }
 
@@ -20,6 +21,7 @@ function convertWorkersToDwc(creature) {
   return {
     ...creature,
     animatedProperties: creature.animated_properties,
+    animated_properties: undefined
   };
 }
 
