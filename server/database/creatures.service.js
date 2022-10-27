@@ -12,7 +12,7 @@ exports.save = async function (creature) {
     throw new Error(result.data.error);
   }
 
-  return result.data;
+  return result.data.row;
 };
 
 exports.find = async function (where) {

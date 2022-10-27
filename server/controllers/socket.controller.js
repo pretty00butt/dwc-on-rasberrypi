@@ -38,7 +38,7 @@ exports.userConnected = async (socket) => {
 
   await gardenController.clearGardenSection(user);
   const garden = await gardenController.createGardenSection(user);
-  console.log(`garden ${garden.id} is created for ${user.id}`);
+  console.log(`garden ${garden.id} is created for ${garden.user_id}`);
 
   if (garden) {
     user.garden_section_id = garden.id;

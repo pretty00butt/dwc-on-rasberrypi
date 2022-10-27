@@ -26,7 +26,7 @@ exports.createCreature = async (garden, user) => {
       break;
   }
 
-  const { row: creature } = await creaturesService.save({
+  const creature = await creaturesService.save({
     appearance: {
       ...creatureProps,
     },
